@@ -1,0 +1,14 @@
+{
+  "name": "tours",
+  "version": "1.0.0",
+  "description": "Application build on NodeJs and MongoDb",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aakash Shivanshu",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
