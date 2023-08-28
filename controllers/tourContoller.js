@@ -1,3 +1,4 @@
+const { log } = require('console');
 const fs = require('fs');
 
 const tours = JSON.parse(
@@ -15,6 +16,16 @@ exports.checkID = (req, res, next, val) => {
     });
   }
 
+  next();
+};
+
+exports.validateBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    return res.status(400).json({
+      status: 'Failed',
+      message: 'Please Enter the name and price of tour',
+    });
+  }
   next();
 };
 
