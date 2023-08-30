@@ -1,8 +1,36 @@
+const { query } = require('express');
 const Tour = require('../models/tourModel');
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    console.log(req.query);
+    // BUILD QUERY
+    // 1) FILTERING
+    const queryObj = { ...req.query };
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach((el) => delete queryObj[el]);
+
+    // 2) ADVANCD FILTERING
+    // QREQ.QUERY WHEN WE WANT DURATION>=5
+    // {difficulty:'easy', duration:{gte:5}}
+    // {difficulty:'easy', duration:{$gte:5}} // ->MONGO QUERY(The only differene is $)
+
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+    // THIS IS HOW WE CAN CHAIN A BUNCH OF QUERRIES
+    // const tours = await Tour.find(queryObj);
+    // const tours = await Tour.find()
+    //   .where('duartion')
+    //   .equals(5)
+    //   .where('diffculty')
+    //   .equals('easy');
+
+    const query = Tour.find(JSON.parse(queryStr));
+
+    // QUERY EXECUTION
+    const tours = await query;
+
     res.status(200).json({
       status: 'success',
       results: tours.length,
