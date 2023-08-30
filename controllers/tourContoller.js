@@ -4,29 +4,51 @@ const Tour = require('../models/tourModel');
 exports.getAllTours = async (req, res) => {
   try {
     console.log(req.query);
+
+    /*
+     THIS IS HOW WE CAN CHAIN A BUNCH OF QUERRIES
+     const tours = await Tour.find(queryObj);
+     const tours = await Tour.find()
+       .where('duartion')
+       .equals(5)
+       .where('diffculty')
+       .equals('easy');
+    */
+
     // BUILD QUERY
-    // 1) FILTERING
+    // 1a) FILTERING
     const queryObj = { ...req.query };
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
 
-    // 2) ADVANCD FILTERING
-    // QREQ.QUERY WHEN WE WANT DURATION>=5
-    // {difficulty:'easy', duration:{gte:5}}
-    // {difficulty:'easy', duration:{$gte:5}} // ->MONGO QUERY(The only differene is $)
+    // 1b) ADVANCD FILTERING
+    /*
+     QREQ.QUERY WHEN WE WANT DURATION>=5
+     {difficulty:'easy', duration:{gte:5}}
+     {difficulty:'easy', duration:{$gte:5}} // ->MONGO QUERY(The only differene is $)
+    */
 
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-    // THIS IS HOW WE CAN CHAIN A BUNCH OF QUERRIES
-    // const tours = await Tour.find(queryObj);
-    // const tours = await Tour.find()
-    //   .where('duartion')
-    //   .equals(5)
-    //   .where('diffculty')
-    //   .equals('easy');
+    let query = Tour.find(JSON.parse(queryStr));
 
-    const query = Tour.find(JSON.parse(queryStr));
+    // 2) SORTING
+    /*
+      a> for ascending simply add that field
+      and for descending add - in front of that field
+      E.g.:sort=-price
+
+      b> Inorder to sort on the basis of two fields in mongoose
+      We do: sort('price ratingsAverage');
+      And the query is like: sort=prie,ratingsAverage
+    */
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    }else{
+      query=query.sort("-createdAt");
+    }
 
     // QUERY EXECUTION
     const tours = await query;
