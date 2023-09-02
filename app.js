@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
-const globaErrorHandler = require('./controllers/errorController');
+const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 
 const app = express();
@@ -17,10 +17,10 @@ app.use(express.static(`${__dirname}/public`));
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 // UNHANDLED ROUTE
-app.use('*', (req, res, next) => {
-  next(new AppError(`Can't find  ${req.originalUrl} on the server.`, 404));
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
-app.use(globaErrorHandler);
+app.use(globalErrorHandler);
 
 module.exports = app;
