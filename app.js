@@ -14,5 +14,13 @@ app.use(express.static(`${__dirname}/public`));
 // ROUTES
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+// UNHANDLED ROUTE
+app.use('*', (req, res, next) => {
+  res.status(404).json({
+    status: 'failed',
+    message: `Can't find  ${req.originalUrl} on the server.`,
+  });
+  next();
+});
 
 module.exports = app;
