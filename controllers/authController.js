@@ -16,6 +16,7 @@ exports.signup = catchAsync(async (req, res) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
+    passwordChangeAt: req.body.passwordChangeAt
   });
 
   const token = signToken(newUser._id);
@@ -77,7 +78,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   // 4) Check if user changed password after the token was issued
-  if (currentUser.changePasswordAfter(decoded.iat)) {
+  if (!currentUser.changePasswordAfter(decoded.iat)) {
     return next(
       new AppError('User recently changed password!. Please login again', 401)
     );
