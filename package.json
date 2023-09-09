@@ -18,6 +18,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.0",
     "helmet": "^7.0.0",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^5.8.1",
     "mongoose": "^7.4.5",
