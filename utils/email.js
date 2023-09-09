@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-const { options } = require('../routes/userRoutes');
 
 const sendEmail = async (options) => {
   //1) Create a transporter
