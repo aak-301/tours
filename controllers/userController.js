@@ -1,4 +1,5 @@
 const User = require('../models/userModel');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getAllUsers = catchAsync(async (req, res) => {
@@ -10,6 +11,23 @@ exports.getAllUsers = catchAsync(async (req, res) => {
     data: { users },
   });
 });
+
+exports.updateMe = (req, res, next) => {
+  //1) Create user if user POSTs password data
+  if (req.body.password || req.body.passwordConfirm) {
+    return next(
+      new AppError(
+        'This route is not for route updates. Please use updateMyPassword',
+        400
+      )
+    );
+  }
+
+  //2) Update user doc
+  res.status(200).json({
+    status: ' sucess',
+  });
+};
 
 exports.getUser = (req, res) => {
   res.status(500).json({
