@@ -5,14 +5,22 @@ const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const path = require('path');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const viewRouter = require('./routes/viewRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 
 const app = express();
+
+app.set('view engine', 'pug');
+app.set('views', path.join(`${__dirname}`, 'views'));
+
+// Serving static files
+app.use(express.static(path.join(`${__dirname}`, 'public')));
 
 // GLOBAL MIDDLEWARES
 
@@ -55,15 +63,13 @@ app.use(
   })
 );
 
-// Serving static files
-app.use(express.static(`${__dirname}/public`));
-
 app.use((req, res, next) => {
   // console.log(req.headers);
   next();
 });
 
 // ROUTES
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
