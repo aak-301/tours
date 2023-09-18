@@ -25,7 +25,7 @@ app.use(express.static(path.join(`${__dirname}`, 'public')));
 // GLOBAL MIDDLEWARES
 
 // Set Seurity HTTP header
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {
