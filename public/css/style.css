@@ -632,6 +632,14 @@ body {
   content: '';
   width: 2rem;
 }
+.reviews::-webkit-scrollbar {
+  height: 0.75rem;
+}
+ 
+.reviews::-webkit-scrollbar-thumb {
+  background: rgba(22, 22, 22, 0.5);
+  border-radius: 10px;
+}
 .reviews__avatar {
   display: -webkit-box;
   display: -ms-flexbox;
